@@ -1,10 +1,26 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { decrement, decrementByAmount, increment, incrementByAmount } from './counterSlice'
+import { getDataAll, updateApiData } from '../apiCalls/apiSlice'
+import axios from 'axios'
 
 export function Counter() {
   const count = useSelector((state) => state.counter.value)
+  const data = useSelector((state) => state.api.value)
   const dispatch = useDispatch()
+  const apiUrl = "https://get.geojs.io/v1/ip/country.json?ip=8.8.8.8"
+
+  useEffect(()=>{
+    dispatch(getDataAll({name: 'testing!!!'}))
+    axios.get(apiUrl)
+    .then(async (response)=>{
+      console.log(response);
+      await dispatch(updateApiData(response.data))
+    })
+    .catch((err)=>{
+      console.log(err);
+    })
+  }, [])
 
   return (
     <div>
